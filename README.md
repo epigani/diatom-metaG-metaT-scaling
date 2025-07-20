@@ -5,6 +5,8 @@ Code and data for ‘Temperature-driven scaling patterns emerge in diatom gene e
 
 ### abundace tables
 
+The original MATOU unigene abundance tables can be found in the **metaGT_micro_bacilla.zip** file. Before executing the scipts, first extract the abundance tables from zip file into the **data** directory.  
+  
 **metaG_micro_bacilla.csv**: abundance table for metagenomics unigenes filtered on the 20-180 μm (micro) size fraction and the diatom (Bacillariophyta) class.  
 **metaT_micro_bacilla.csv**: abundance table for metatranscriptomics unigenes filtered on the 20-180 μm (micro) size fraction and the diatom (Bacillariophyta) class.  
   
