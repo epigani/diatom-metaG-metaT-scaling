@@ -95,6 +95,9 @@ individual stations
 The only input parameter is whether to perform the analysis on the metagenomics (metaG) or metatranscriptomics (metaT) data and can be changed directly in the main function of the script.  
 The script reads the required abundance table and the table with the KS threshold values.  
 The output of the script is the table with the minimum abundance values.  
+The script takes around 2 hours to run.  
   
 **fit/fit_pareto.py**: Python script that performs the fit and goodness-of-fit test of the theoretical distribution to the filtered abundance tables.  
-In the main function of the script, two parameters can be adjusted. The first input parameter is whether to perform the analysis on the metagenomics (metaG) or metatranscriptomics (metaT) data. The second parameter is the number of replicates to use for the goodness-of-fit test. If Nrep is the number of replicates, the minimum p-value for the test is 1/Nrep.
+In the main function of the script, two parameters can be adjusted. The first input parameter is whether to perform the analysis on the metagenomics (metaG) or metatranscriptomics (metaT) data. The second parameter is the number of replicates to use for the goodness-of-fit test. If Nrep is the number of replicates, the minimum p-value for the test is 1/Nrep.  
+The output of the script is a table with the summary of the fit of the theoretical distribution and the goodness-of-fit test for all stations.  
+The script takes a few hours to run for 1,000 replicates.

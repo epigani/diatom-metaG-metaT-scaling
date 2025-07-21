@@ -10,7 +10,7 @@
 # to the filtered Tara Oceans unigene abundances and 
 # performs the goodness-of-fit tests.
 
-# Input parameters (line XXX):
+# Input parameters (line 315):
 # metaGT = metaG -> perform the analysis on the 
 #	metagenomics data
 # metaGT = metaT -> perform the analysis on the 
@@ -201,15 +201,13 @@ def evenness(n_array):
 
 ########################################################
 
-# Helper function that fits the theoretical distribution
-# to the original filtered unigene abundance data and
-# calculates the statistics
+# Helper function that calculates the statistics
 # - n_array: vector of unigene abundances
 # - a: α parameter of the theoretical distribution
 # - logk: 10-based logarithm of the k parameter of the 
 #			theoretical distribution
 # - mu: the minimum abundance value μ
-def original_run(n_array,a,logk,mu):
+def calc_statistics(n_array,a,logk,mu):
 
 	# the goodness-of-fit statistsics
 	# Kolmogorov-Smirnov
@@ -225,9 +223,8 @@ def original_run(n_array,a,logk,mu):
 
 ########################################################
 
-# Helper function that generates the replicate sample,
+# Helper function that generates the replicate sample and
 # fits the theoretical distribution to the replicate
-# and calculates the statistics
 # - S: the number of unigene abundances in the sample
 # - a: α parameter of the theoretical distribution
 # - logk: 10-based logarithm of the k parameter of the 
@@ -246,17 +243,8 @@ def replicate_run(S,a,logk,mu):
 	a_sub = res[0]
 	logk_sub = res[1]
 
-	# the goodness-of-fit statistsics
-	# Kolmogorov-Smirnov
-	KS_sub = KS(sub_array,a_sub,logk_sub,mu)
-	# Anderson-Darling
-	AD_sub = AD(sub_array,a_sub,logk_sub,mu)
-
-	# calculate the evenness
-	even_sub = evenness(sub_array)
-
 	# return some interesting statistics as a vector
-	return([np.sum(sub_array),a_sub,logk_sub,KS_sub,AD_sub,even_sub,np.median(sub_array),np.mean(sub_array)])
+	return(calc_statistics(sub_array,a_sub,logk_sub,mu))
 
 ########################################################
 
@@ -293,7 +281,7 @@ def do_station(stat_ID,n_array,mu,Nrep):
 	res = minimise_LL_par(n_array,fit_init).x
 
 	# the first row is the fit to the original data
-	replicates[0,:] = original_run(n_array,res[0],res[1],mu)
+	replicates[0,:] = calc_statistics(n_array,res[0],res[1],mu)
 
 	# the remaining rows are the fits to the 
 	# replicate data runs
