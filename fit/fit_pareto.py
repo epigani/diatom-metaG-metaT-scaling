@@ -10,7 +10,7 @@
 # to the filtered Tara Oceans unigene abundances and 
 # performs the goodness-of-fit tests.
 
-# Input parameters (line 315):
+# Input parameters (line 313):
 # metaGT = metaG -> perform the analysis on the 
 #	metagenomics data
 # metaGT = metaT -> perform the analysis on the 
@@ -28,7 +28,7 @@ import random
 
 ########################################################
 
-# Helper function with the theoretical distribution
+# Helper function with the theoretical distribution (PDF)
 # This is the discretised version of the original 
 # continuous distribution.
 # - n: vector of unigene abundances
@@ -38,8 +38,8 @@ import random
 # - mu: the minimum abundance value μ
 def pareto3(n,a,logk,mu):
 
-	# use the difference between the cumulative 
-	# distribution at (n+1) with the one at (n)
+	# use the difference between the CDF 
+	# at (n+1) with the one at (n)
 	# to discretise the distribution
 	return( pow((pow(10,logk) + n - mu)/pow(10,logk),-a) - pow((pow(10,logk) + n + 1.0 - mu)/pow(10,logk),-a) )
 
@@ -78,7 +78,7 @@ def minimise_LL_par(n_array,fit_init):
 ########################################################
 
 # Helper function with the theoretical cumulative 
-# distribution
+# distribution function (CDF)
 # - n: vector of unigene abundances
 # - a: α parameter of the theoretical distribution
 # - logk: 10-based logarithm of the k parameter of the 
@@ -90,9 +90,8 @@ def cumul(n,a,logk,mu):
 
 ########################################################
 
-# Helper function with the inverse of the theoretical
-# cumulative distribution. This expression can be 
-# analytically derived.
+# Helper function with the inverse of the theoretical CDF.
+# This expression can be analytically derived.
 # - r: a number drawn from a uniform distribution 
 #		between 0 and 1
 # - a: α parameter of the theoretical distribution
@@ -107,8 +106,7 @@ def cumul_inv(r,a,logk,mu):
 
 # Helper function that samples a random number from the 
 # theoretical distribution by using the analytical 
-# expression of the inverse of the theoretical
-# cumulative distribution
+# expression of the inverse of the theoretical CDF
 # - a: α parameter of the theoretical distribution
 # - logk: 10-based logarithm of the k parameter of the 
 #			theoretical distribution
@@ -152,13 +150,13 @@ def create_sub(N,a,logk,mu):
 # - mu: the minimum abundance value μ
 def KS(n_array,a,logk,mu):
 
-	# construct the empirical cumulative distribution
+	# construct the empirical CDF
 	counts = np.asarray(pd.Series(n_array).value_counts().sort_index(ascending=True))
 	d = {'x':np.unique(n_array),'S':np.cumsum(counts)/np.sum(counts)}
 
 	# create a dataframe
 	df_cumul = pd.DataFrame(data=d)
-	# calculate the theoretical cumulative distribution
+	# calculate the theoretical CDF
 	df_cumul['P'] = cumul(df_cumul['x'].values,a,logk,mu)
 	# return the KS statistic = maximum difference 
 	# between the theoretical and empirical CDF

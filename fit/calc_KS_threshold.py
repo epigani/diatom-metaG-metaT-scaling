@@ -11,7 +11,7 @@
 # statistic of the fit of the theoretical distribution 
 # to the filtered data.
 
-# Input parameter (line 177):
+# Input parameter (line 176):
 # metaGT = metaG -> perform the analysis on the 
 #	metagenomics data
 # metaGT = metaT -> perform the analysis on the 
@@ -26,7 +26,7 @@ import pandas as pd
 
 ########################################################
 
-# Helper function with the theoretical distribution
+# Helper function with the theoretical distribution (PDF)
 # This is the discretised version of the original 
 # continuous distribution.
 # - n: vector of unigene abundances
@@ -36,8 +36,8 @@ import pandas as pd
 # - mu: the minimum abundance value μ
 def pareto3(n,a,logk,mu):
 
-	# use the difference between the cumulative 
-	# distribution at (n+1) with the one at (n)
+	# use the difference between the CDF 
+	# at (n+1) with the one at (n)
 	# to discretise the distribution
 	return( pow((pow(10,logk) + n - mu)/pow(10,logk),-a) - pow((pow(10,logk) + n + 1.0 - mu)/pow(10,logk),-a) )
 
@@ -76,7 +76,7 @@ def minimise_LL_par(n_array,fit_init):
 ########################################################
 
 # Helper function with the theoretical cumulative 
-# distribution
+# distribution function (CDF)
 # - n: vector of unigene abundances
 # - a: α parameter of the theoretical distribution
 # - logk: 10-based logarithm of the k parameter of the 
@@ -105,13 +105,13 @@ def KS(mu,n_array,fit_init):
 	a = res[0]
 	logk = res[1]
 
-	# construct the empirical cumulative distribution
+	# construct the empirical CDF
 	counts = np.asarray(pd.Series(n_array).value_counts().sort_index(ascending=True))
 	d = {'x':np.unique(n_array),'S':np.cumsum(counts)/np.sum(counts)}
 
 	# create a dataframe
 	df_cumul = pd.DataFrame(data=d)
-	# calculate the theoretical cumulative distribution
+	# calculate the theoretical CDF
 	df_cumul['P'] = cumul(df_cumul['x'].values,a,logk,mu)
 	# return the KS statistic = maximum difference 
 	# between the theoretical and empirical CDF
@@ -146,22 +146,21 @@ def minimise_KS(n_array,fit_init,mu_upper):
 
 # Helper function that calculates the minimum abundance
 # value μ by discarding the abundaces below the abundance 
-# value for which the cumulative distribution is equal
-# to the threshold value (cum_thresh)
+# value for which the CDF is equal to the threshold value 
+# (cum_thresh)
 # - n_array: vector of unigene abundances
-# - cum_thresh: the threshold value of the cumulative
-#				distribution
+# - cum_thresh: the threshold value of the CDF
 def get_cumthresh(n_array,cum_thresh):
 
 	# the total abundance
 	N_tot = sum(n_array)
-	# construct the empirical distribution function
+	# construct the empirical CDF
 	n_array = n_array/N_tot
 	n_array = np.asarray(sorted(n_array))
 	n_array_cumsum = np.asarray(np.cumsum(n_array))
 	n_array = n_array*N_tot
-	# find the abundance at which the cumulative
-	# distribution surpasses the threshold
+	# find the abundance at which the CDF
+	# surpasses the threshold
 	thresh_val = n_array[(len(n_array)-len(list(filter(lambda num: num > cum_thresh, n_array_cumsum))))]
 
 	return(thresh_val)
@@ -195,8 +194,7 @@ def main():
 	n_array = meta[stats[0]].values
 	n_array = list(filter(lambda num: num != 0, n_array))
 
-	# get the μ value by using the threshold of the
-	# cumulative distribution
+	# get the μ value by using the threshold of the CDF
 	cum_th = get_cumthresh(n_array,0.01)
 
 	# get the maximum μ value to test for this station

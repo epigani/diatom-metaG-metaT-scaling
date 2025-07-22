@@ -5,7 +5,7 @@ Code and data for ‘Temperature-driven scaling patterns emerge in diatom gene e
 
 ### abundace tables
 
-The original MATOU unigene abundance tables can be found in the **metaGT_micro_bacilla.zip** file. Before executing the scipts, first extract the abundance tables from zip file into the **data** directory.  
+The original MATOU unigene abundance tables can be found in the **metaGT_micro_bacilla.zip** file. Before executing the scipts, first extract the abundance tables from the zip file into the **data** directory.  
   
 **metaG_micro_bacilla.csv**: abundance table for metagenomics unigenes filtered on the 20-180 μm (micro) size fraction and the diatom (Bacillariophyta) class.  
 **metaT_micro_bacilla.csv**: abundance table for metatranscriptomics unigenes filtered on the 20-180 μm (micro) size fraction and the diatom (Bacillariophyta) class.  
@@ -23,11 +23,11 @@ individual unigenes
 * abundance of unigene X in station Y;
 * fill value: NA.
 
-The data is filtered as following. First, all abundances lower than 10 are discarded. Next, for each station individually, unigenes in metaT that are not present in metaG are discarded.
+The data is filtered as following. First, all entries lower than 10 are discarded. Next, for each station individually, unigenes in metaT that are not present in metaG are discarded.
 
 ### KS threshold parameters
 
-To determine the minimum abundance value μ, unigenes are progressively removed starting from the lowest abundances. The value μ for which the Kolmogorov-Smirnov (KS) statistic of the fit to the remaining abundance data is minimised is taken to be the minimum abundance value for consecutive fits. Here, the upper μ value to be tested in this way is determined by visually inspecting the cumulative distribution to find a balance between computing time and accuracy. More automated methods were tested but do not significantly change the final results while making the computation impractical.
+To determine the minimum abundance value μ, unigenes are progressively removed starting from the lowest abundances. The value μ for which the Kolmogorov-Smirnov (KS) statistic of the fit to the remaining abundance data is minimised is taken to be the minimum abundance value for the following fitting procedure. Here, the upper μ value to be tested in this way is determined by visually inspecting the cumulative distribution function (CDF) to find a balance between computing time and accuracy. More automated methods were tested but do not significantly change the final results while making the computation impractical.
 
 **limit_KS_threshold_metaG_micro_bacilla.csv**: Helper table for the maximum μ values to be tested for each station for the metagenomics filtered data set.  
 **limit_KS_threshold_metaT_micro_bacilla.csv**: Helper table for the maximum μ values to be tested for each station for the metatranscriptomics filtered data set.  
@@ -50,7 +50,7 @@ Results of the algorithm to minimise the KS statistic by progressively increasin
 *columns*:
 
 * 'station': Tara Oceans station ID; 
-* 'mu_cum': minimum abundance value μ determined by taking the abundance where the cumulative distribution is 0.01;
+* 'mu_cum': minimum abundance value μ determined by taking the abundance where the CDF is 0.01 (not used in further analyses);
 * 'mu_KS': minimum abundance value μ determined by minimising the KS statistic as described above.
 
 *rows*:  
@@ -58,7 +58,7 @@ individual stations
 
 ### fit results
 
-The following fitting procedure is applied to each station. The filtered abundances are further filtered by removing all unigenes with abundance lower than the minimal abundance μ. Next, the theoretical curve is fitted to the original abundances. For the goodness-of-fit test, replicate abundances are drawn from the fitted theoretical distribution. The theoretical distribution is then fitted to these replicate samples and the statistics are recalculated.  
+The following fitting procedure is applied to each station. The filtered abundances are further filtered by removing all unigenes with abundance lower than the minimal abundance μ found before. Next, the theoretical curve is fitted to the original abundances. For the goodness-of-fit test, replicate abundances are drawn from the fitted theoretical distribution. The theoretical distribution is then fitted to these replicate samples and the statistics are recalculated. The final statistics are calculated from the combined samples. The Python script *fit_pareto.py* performs this algorithm.  
   
 **summary_fit_metaG_micro_bacilla.csv**: summary of the fitting procedure and goodness-of-fit test for each station for the filtered metagenomics data set.  
 **summary_fit_metaT_micro_bacilla.csv**: summary of the fitting procedure and goodness-of-fit test for each station for the filtered metatranscriptomics data set.  
@@ -95,9 +95,9 @@ individual stations
 The only input parameter is whether to perform the analysis on the metagenomics (metaG) or metatranscriptomics (metaT) data and can be changed directly in the main function of the script.  
 The script reads the required abundance table and the table with the KS threshold values.  
 The output of the script is the table with the minimum abundance values.  
-The script takes around 2 hours to run.  
+The programme takes around 2 hours to run.  
   
 **fit/fit_pareto.py**: Python script that performs the fit and goodness-of-fit test of the theoretical distribution to the filtered abundance tables.  
 In the main function of the script, two parameters can be adjusted. The first input parameter is whether to perform the analysis on the metagenomics (metaG) or metatranscriptomics (metaT) data. The second parameter is the number of replicates to use for the goodness-of-fit test. If Nrep is the number of replicates, the minimum p-value for the test is 1/Nrep.  
 The output of the script is a table with the summary of the fit of the theoretical distribution and the goodness-of-fit test for all stations.  
-The script takes a few hours to run for 1,000 replicates.
+The programme takes a few hours to run for 1,000 replicates.
