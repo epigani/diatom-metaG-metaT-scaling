@@ -11,3 +11,4 @@ geopandas
 cmocean
 tqdm
 zipfile
+mpmath
