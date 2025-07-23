@@ -39,7 +39,7 @@ import random
 def pareto3(n,a,logk,mu):
 
 	# use the difference between the CDF 
-	# at (n+1) with the one at (n)
+	# at (n) with the one at (n-1)
 	# to discretise the distribution
 	return( pow((pow(10,logk) + n - mu)/pow(10,logk),-a) - pow((pow(10,logk) + n + 1.0 - mu)/pow(10,logk),-a) )
 

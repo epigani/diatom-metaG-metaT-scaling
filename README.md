@@ -89,6 +89,47 @@ The following fitting procedure is applied to each station. The filtered abundan
 *rows*:  
 individual stations
 
+## data/filter
+
+This directory contains the scripts and tables that are used in processing and filtering the original [MATOU](https://www.genoscope.cns.fr/tara/) unigene abundance tables.  
+The downloaded original abundance table is first filtered by size class (20-180 μm) and sampling depth (SURFACE). This very large data file is cut into smaller pieces so that they can be loaded in memory. These files are characterised by:  
+
+*columns:*
+
+* 'geneID': MATOU unigene ID;
+* 'sampleName': MATOU sample ID;
+* 'readCount': abundance of the unigene in the sample.
+
+*rows:*  
+individual data entries (unigene-sample)  
+  
+The Python script **preprocessing.py** takes these raw abundance files and creates abundance files per station. These files contain:  
+
+*columns:*
+
+* 'geneID': MATOU unigene ID;
+* 'readCount': abundance of the unigene.
+
+*rows:*  
+individual unigenes  
+  
+The R script **get_taxon.R** takes the MATOU taxonomy table. This taxonomy table lists the taxonomy of each unigene in the MATOU data:  
+
+*columns:*
+
+* 'geneID': MATOU unigene ID;
+* 'taxID': MATOU taxon ID;
+* 'taxName': name of the lowest taxonomic level;
+* 'taxRank': the lowest taxonomic level;
+* 'taxLineage': the full taxonomy up to the lowest level;
+
+*rows:*  
+individual unigenes (76,133,096)
+
+The scripts extracts all the unigene IDs that belong to the Bacillariophyta taxon. These unigene IDs are listed in the **ID_bacilla.csv** table under the 'geneID' column.  
+  
+Finally, the **filter_counts.R** script filters the original unigene abundance data for metaG and metaT using the Bacillariophyta unigene IDs, discarding all abundances lower than 10 and by taking the intersection with metaG for the metaT data. The results are the **metaG_micro_bacilla.csv** and **metaT_micro_bacilla.csv** tables as described above.
+
 ## scripts
 
 **fit/calc_KS_threshold.py**: Python script that calculates the minimum abundance value μ by minimising the Kolmogorov-Smirnov (KS) statistic of the fit of the theoretical distribution to the filtered data.  
