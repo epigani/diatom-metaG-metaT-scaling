@@ -10,3 +10,4 @@ cartopy
 geopandas
 cmocean
 tqdm
+zipfile
