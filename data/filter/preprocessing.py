@@ -24,7 +24,7 @@ os.makedirs('metaG_micro/by_sampleID', exist_ok=True)
 os.makedirs('metaT_micro/by_sampleID', exist_ok=True)
 
 # Read the original abundance data.
-# list of files in ssv directory that are .ssv files
+# list of files in the ssv directory that are .ssv files
 # the original data was cut into pieces to make them more
 # manageable
 ssv_files = [f for f in os.listdir('ssv') if f.endswith('.ssv')]
@@ -51,10 +51,10 @@ for file in ssv_files[:]:
             filename = 'metaG_micro/by_sampleID/' + value + '.csv'
         elif ((value[-2:] == '13') or (value[-2:] == '14')):
             filename = 'metaT_micro/by_sampleID/' + value + '.csv'
-        # if file already exists, append to it. otherwise, create a new file
+        # if the file already exists, append to it. 
+        # otherwise, create a new file
         # because some samples are divided over two ssv subfiles
         if os.path.isfile(filename):
             df2.to_csv(filename, sep=',', header=False, mode='a', index=False)
         else:
             df2.to_csv(filename, sep=',', header=True, index=False)
-    

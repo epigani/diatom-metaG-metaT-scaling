@@ -51,14 +51,10 @@ for(i in 1:length(list_files_G)){
 	# get the station ID
 	stat_i <- unlist(strsplit(unlist(strsplit(list_files_G[i],split="/"))[3],
 						split="SUR"))[1] %>% as.numeric()
-	print(stat_i)
-	stat_i <- unlist(strsplit(unlist(strsplit(list_files_T[i],split="/"))[3],
-						split="SUR"))[1] %>% as.numeric()
-	print(stat_i)
-	
+	print(stat_i)	
 
 	# Get the intersection of metaG and metaT unigenes 
-	# and use this for filtering metaT
+	# and use this to filter metaT
 	metaT <- inner_join(metaG,metaT,by='geneID') %>%
 				select(c(geneID,countsT))
 
@@ -71,33 +67,18 @@ for(i in 1:length(list_files_G)){
 									mutate(station=stat_i))
 
 }
-	
-	if(F){
-	stat_all <- c( 7,11,18,22,23,25,26,30,36,38,39,41,46,51,52,64,65,66,67,68,70,72,76,78,80,81,82,84,  
-					85,92,98,100,102,109,110,111,122,123,124,125,128,131,132,135,136,137,138,142,143,144, 
-					145,146,147,148,149,150,151,152,155,158,168,173,175,178,180,188,189,191,193,194,196, 
-					201,205,206,208,209,210)
 
-	stat_not <- stat_all[which(!(stat_all %in% (metaT_tot %>% pull(station) %>% unique()) ))]
-	metaT_tot <- rbind(metaT_tot,
-						data.frame(geneID=rep(metaT_tot$geneID[1],length(stat_not)),
-									counts=rep(NA,length(stat_not)),
-									station=stat_not))
-	stat_not <- stat_all[which(!(stat_all %in% (metaG_tot %>% pull(station) %>% unique()) ))]
-	metaG_tot <- rbind(metaG_tot,
-						data.frame(geneID=rep(metaG_tot$geneID[1],length(stat_not)),
-									counts=rep(NA,length(stat_not)),
-									station=stat_not))
+# Transform the final data tables to unigene x station
+# format
+metaG_tot <- metaG_tot %>% pivot_wider(names_from=station,values_from=counts)
+metaT_tot <- metaT_tot %>% pivot_wider(names_from=station,values_from=counts)
 
-	}
+# Reorder the columns/stations
+cols <- names(metaT_tot)[-1] %>% as.numeric() %>% sort() %>% as.character()
+cols <- c('geneID',cols)
 
-	metaG_tot <- metaG_tot %>% pivot_wider(names_from=station,values_from=counts)
-	metaT_tot <- metaT_tot %>% pivot_wider(names_from=station,values_from=counts)
-
-	cols <- names(metaT_tot)[-1] %>% as.numeric() %>% sort() %>% as.character()
-	cols <- c('geneID',cols)
-
-	metaG_tot[,cols] %>% 
-				write.csv('metaG_micro_bacilla.csv',row.names=FALSE)
-	metaT_tot[,cols] %>% 
-				write.csv('metaT_micro_bacilla.csv',row.names=FALSE)
+# Write the final tables to CSV files
+metaG_tot[,cols] %>% 
+			write.csv('metaG_micro_bacilla.csv',row.names=FALSE)
+metaT_tot[,cols] %>% 
+			write.csv('metaT_micro_bacilla.csv',row.names=FALSE)

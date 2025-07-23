@@ -121,14 +121,14 @@ The R script **get_taxon.R** takes the MATOU taxonomy table. This taxonomy table
 * 'taxID': MATOU taxon ID;
 * 'taxName': name of the lowest taxonomic level;
 * 'taxRank': the lowest taxonomic level;
-* 'taxLineage': the full taxonomy up to the lowest level;
+* 'taxLineage': the full taxonomy up to the lowest level.
 
 *rows:*  
 individual unigenes (76,133,096)
 
-The scripts extracts all the unigene IDs that belong to the Bacillariophyta taxon. These unigene IDs are listed in the **ID_bacilla.csv** table under the 'geneID' column.  
+The script extracts all the unigene IDs that belong to the Bacillariophyta taxon. These unigene IDs are listed in the **ID_bacilla.csv** table under the 'geneID' column.  
   
-Finally, the **filter_counts.R** script filters the original unigene abundance data for metaG and metaT using the Bacillariophyta unigene IDs, discarding all abundances lower than 10 and by taking the intersection with metaG for the metaT data. The results are the **metaG_micro_bacilla.csv** and **metaT_micro_bacilla.csv** tables as described above.
+Finally, the **filter_counts.R** script filters the original unigene abundance data for metaG and metaT using the Bacillariophyta unigene IDs, discarding all abundances lower than 10 and taking the intersection with metaG for the metaT data. The results are the **metaG_micro_bacilla.csv** and **metaT_micro_bacilla.csv** tables as described above.
 
 ## scripts
 
