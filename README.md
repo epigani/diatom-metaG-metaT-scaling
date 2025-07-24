@@ -62,9 +62,36 @@ individual unigenes
 * abundance of unigene X in station Y;
 * fill value: NA.
 
-### environment
+### temperature
 
-The **woa_pisces_tarassd.tsv** table contains environmental information about a subset of Tara Oceans surface stations. In the analysis, only the 'temp_woa' column is used for the average Sea Surface Temperature at the sampling locations.
+This directory contains the scripts and tables used in the extraction of the environmental Sea Surface Temperature (SST) values at the Tara Oceans sampling locations from a downloaded World Ocean Atlas (WOA) grid.  
+  
+The temperature data grid is downloaded from the 2023 [WOA](https://www.ncei.noaa.gov/access/world-ocean-atlas-2023/) data release. We selected the 'average decades' product, which takes the average interpolated value of averages over seven decades between 1955 and 2022. This product has the longest time average and also contains the lowest number of missing values. The grid has a resolution of 0.25° and a global extent. The product provides data at different depth levels and we selected the second level at 5 metres depth to retain the surface temperature without spurious variations at the top surface level. The data can be downloaded as a NetCDF file containing all the 3D temperature fields. We use the *t_mn*, average SST, and *t_sd*, standard deviation around the average, as variables.  
+  
+The **TARA_reg_stations.tab** table contains the contextual data of the Tara Oceans sampling stations as extracted from [PANGAEA](https://doi.org/10.1594/PANGAEA.842237). The used columns are:
+
+*columns:*
+
+* 'Station (TARA_station#)': Tara Oceans station ID;
+* 'Latitude': WGS84 latitudinal coordinate (degrees east);
+* 'Longitude': WGS84 longitudinal coordinate (degrees north).
+
+*rows:*  
+individual stations (we note that two stations have double entries: 79a/79b and 148a/148b).
+  
+The R script **extract_stations.R** extracts the mean SST and its standard deviation at the Tara Oceans sampling stations by bilinear interpolation from the WOA grid.  
+The results of this extraction can be found in the **TARA_env_table.csv** table:  
+
+*columns:*
+
+* 'station': Tara Oceans station ID;
+* 'lon': WGS84 longitudinal coordinate (degrees);
+* 'lat': WGS84 latitudinal coordinate (degrees);
+* 'SST_mn': average SST value (°C);
+* 'SST_sd': SST standard deviation (°C).
+
+*rows:*  
+individual stations (we note that two stations have double entries: 79 and 148).
 
 ## fit
 
