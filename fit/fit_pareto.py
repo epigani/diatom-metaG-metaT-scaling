@@ -316,9 +316,9 @@ def main():
 
 	# read the unigene abundance table
 	# set NA-values to 0
-	meta = pd.read_csv('../data/'+metaGT+'_micro_bacilla.csv').fillna(0)
+	meta = pd.read_csv('../data/filter/'+metaGT+'_micro_bacilla.csv').fillna(0)
 	# read the minimum abundance values μ
-	mu_values = pd.read_csv("../data/summary_KS_threshold_"+metaGT+"_micro_bacilla.csv")
+	mu_values = pd.read_csv("summary_KS_threshold_"+metaGT+"_micro_bacilla.csv")
 
 	# get a list of Tara station IDs (string)
 	stats = meta.columns
