@@ -3,9 +3,48 @@ Code and data for ‘Temperature-driven scaling patterns emerge in diatom gene e
 
 ## data
 
-### abundace tables
+### filter
 
-The original MATOU unigene abundance tables can be found in the **metaGT_micro_bacilla.zip** file. Before executing the scipts, first extract the abundance tables from the zip file into the **data** directory.  
+This directory contains the scripts and tables that are used in processing and filtering the original [MATOU](https://www.genoscope.cns.fr/tara/) unigene abundance tables.  
+The downloaded original abundance table is first filtered by size class (20-180 μm) and sampling depth (SURFACE). This very large data file is cut into smaller pieces so that they can be loaded in memory. These files are characterised by:  
+
+*columns:*
+
+* 'geneID': MATOU unigene ID;
+* 'sampleName': MATOU sample ID;
+* 'readCount': abundance of the unigene in the sample.
+
+*rows:*  
+individual data entries (unigene-sample)  
+  
+The Python script **preprocessing.py** takes these raw abundance files and creates abundance files per station. These files contain:  
+
+*columns:*
+
+* 'geneID': MATOU unigene ID;
+* 'readCount': abundance of the unigene.
+
+*rows:*  
+individual unigenes  
+  
+The R script **get_taxon.R** takes the MATOU taxonomy table. This taxonomy table lists the taxonomy of each unigene in the MATOU data:  
+
+*columns:*
+
+* 'geneID': MATOU unigene ID;
+* 'taxID': MATOU taxon ID;
+* 'taxName': name of the lowest taxonomic level;
+* 'taxRank': the lowest taxonomic level;
+* 'taxLineage': the full taxonomy up to the lowest level.
+
+*rows:*  
+individual unigenes (76,133,096)
+
+The script extracts all the unigene IDs that belong to the Bacillariophyta taxon. These unigene IDs are listed in the **ID_bacilla.csv** table under the 'geneID' column.  
+  
+Finally, the **filter_counts.R** script filters the original unigene abundance data for metaG and metaT using the Bacillariophyta unigene IDs, discarding all abundances lower than 10 and taking the intersection with metaG for the metaT data.  
+  
+The results are the **metaG_micro_bacilla.csv** and **metaT_micro_bacilla.csv** tables. These filtered MATOU unigene abundance tables can be found in the **metaGT_micro_bacilla.zip** file. Before executing the fitting scipts, first extract the abundance tables from the zip file into the **data/filter** directory.  
   
 **metaG_micro_bacilla.csv**: abundance table for metagenomics unigenes filtered on the 20-180 μm (micro) size fraction and the diatom (Bacillariophyta) class.  
 **metaT_micro_bacilla.csv**: abundance table for metatranscriptomics unigenes filtered on the 20-180 μm (micro) size fraction and the diatom (Bacillariophyta) class.  
@@ -23,7 +62,11 @@ individual unigenes
 * abundance of unigene X in station Y;
 * fill value: NA.
 
-The data is filtered as following. First, all entries lower than 10 are discarded. Next, for each station individually, unigenes in metaT that are not present in metaG are discarded.
+### environment
+
+The **woa_pisces_tarassd.tsv** table contains environmental information about a subset of Tara Oceans surface stations. In the analysis, only the 'temp_woa' column is used for the average Sea Surface Temperature at the sampling locations.
+
+## fit
 
 ### KS threshold parameters
 
@@ -89,48 +132,7 @@ The following fitting procedure is applied to each station. The filtered abundan
 *rows*:  
 individual stations
 
-## data/filter
-
-This directory contains the scripts and tables that are used in processing and filtering the original [MATOU](https://www.genoscope.cns.fr/tara/) unigene abundance tables.  
-The downloaded original abundance table is first filtered by size class (20-180 μm) and sampling depth (SURFACE). This very large data file is cut into smaller pieces so that they can be loaded in memory. These files are characterised by:  
-
-*columns:*
-
-* 'geneID': MATOU unigene ID;
-* 'sampleName': MATOU sample ID;
-* 'readCount': abundance of the unigene in the sample.
-
-*rows:*  
-individual data entries (unigene-sample)  
-  
-The Python script **preprocessing.py** takes these raw abundance files and creates abundance files per station. These files contain:  
-
-*columns:*
-
-* 'geneID': MATOU unigene ID;
-* 'readCount': abundance of the unigene.
-
-*rows:*  
-individual unigenes  
-  
-The R script **get_taxon.R** takes the MATOU taxonomy table. This taxonomy table lists the taxonomy of each unigene in the MATOU data:  
-
-*columns:*
-
-* 'geneID': MATOU unigene ID;
-* 'taxID': MATOU taxon ID;
-* 'taxName': name of the lowest taxonomic level;
-* 'taxRank': the lowest taxonomic level;
-* 'taxLineage': the full taxonomy up to the lowest level.
-
-*rows:*  
-individual unigenes (76,133,096)
-
-The script extracts all the unigene IDs that belong to the Bacillariophyta taxon. These unigene IDs are listed in the **ID_bacilla.csv** table under the 'geneID' column.  
-  
-Finally, the **filter_counts.R** script filters the original unigene abundance data for metaG and metaT using the Bacillariophyta unigene IDs, discarding all abundances lower than 10 and taking the intersection with metaG for the metaT data. The results are the **metaG_micro_bacilla.csv** and **metaT_micro_bacilla.csv** tables as described above.
-
-## scripts
+### scripts
 
 **fit/calc_KS_threshold.py**: Python script that calculates the minimum abundance value μ by minimising the Kolmogorov-Smirnov (KS) statistic of the fit of the theoretical distribution to the filtered data.  
 The only input parameter is whether to perform the analysis on the metagenomics (metaG) or metatranscriptomics (metaT) data and can be changed directly in the main function of the script.  
