@@ -169,7 +169,8 @@ df_stat <- fread("TARA_reg_stations.tab",sep="\t",header=TRUE) %>%
 			select(all_of(c(2,5,6)))
 names(df_stat) <- c("station","lat","lon")
 # transform the coordinates to the equidistant coordinates
-df_stat <- df_stat %>% mutate(lon=lon/180*pi,mu=mulat(lat/180*pi))
+df_stat <- df_stat %>% mutate(lon=lon/180*pi,mu=mulat(lat/180*pi)) %>%
+			filter(station != "TARA_148b" & station != "TARA_079b")
 
 # read the SST data as downloaded from WOA
 d <- nc_open("woa23_decav_t00_04.nc")
