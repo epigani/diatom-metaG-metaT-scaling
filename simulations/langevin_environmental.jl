@@ -10,8 +10,8 @@ using NPZ
 
 function sad_to_rates(kG, zetaG, alphaG, sigma_e2)
     sigma_d2 = kG * sigma_e2
-    mu = zetaG * sigma_d2
-    d = (alphaG - 1) * sigma_e2
+    mu = 0.5 * zetaG * sigma_d2
+    d = 0.5 * (alphaG - 1) * sigma_e2
 
     d1 = (sigma_d2 + d) / 2
     b1 = (sigma_d2 - d) / 2

@@ -9,8 +9,9 @@ def get_rates_from_sad(k_G, zeta_G, alpha_G, k_T, b1=1.0, r=1000.0):
     Parametrizzazione basata su: sigma_d^2 = b1 + d1
     """
     # 1. Calcolo d1 dal rapporto (alpha_G - 1) / k_G
+    # Con alpha_G = 1 + 2(d1-b1)/sigma_e^2 e sigma_e^2=(b1+d1)/k_G
     R = (alpha_G - 1.0) / k_G
-    d1 = b1 * (1.0 + R) / (1.0 - R)
+    d1 = b1 * (2.0 + R) / (2.0 - R)
     
     # 2. Calcolo dei rumori
     sig_d_sq = b1 + d1 # Rumore demografico
@@ -18,7 +19,7 @@ def get_rates_from_sad(k_G, zeta_G, alpha_G, k_T, b1=1.0, r=1000.0):
     
     # 3. Calcolo b0 (fissando d0=1)
     d0 = 1.0 
-    b0 = (zeta_G * sig_d_sq) + d0
+    b0 = 0.5 * zeta_G * sig_d_sq + d0
     
     # 4. Calcolo gamma per mantenere k_T = k_G * r / gamma
     gamma = r * (k_G / k_T)
