@@ -393,13 +393,13 @@ function main()
 
     x0 = 1.0
     y0 = 1.0
-    kG = 1.0
-    zetaG = 1.1
-    alphaG = 1.5
-    kT = 5.0
+    kG = 20.0
+    zetaG = 2.0
+    alphaG = 1.1
+    kT = 50.0
     sigma_e2 = 1.0
     b1_target = 1.0
-    r = 500.0
+    r = 5000.0
     dt = 1e-5
     T = Int(5e8)
     decor_thresh = 0.01
