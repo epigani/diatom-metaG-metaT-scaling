@@ -4,4 +4,16 @@ analysis/review-code/
 data/filter/metaGT_micro_bacilla/
 simulations/data/
 files/
+paper/
 AGENTS.md
+reports/
+analysis/normalization_results/
+analysis/old
+analysis/figures/
+analysis/normalization_exploration.py
+analysis/normalization_report_checks.py
+analysis/depth_temperature_dependency_matched.csv
+output/
+tmp/
+scripts/
+
